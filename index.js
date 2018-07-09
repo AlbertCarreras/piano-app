@@ -8,16 +8,14 @@ function playTone() {
     osc.connect(ac.destination);
 
     osc.frequency.value = 100;
-
     osc.start();
-    osc.stop(2);
-    console.log(osc)
+    osc.stop(ac.currentTime + 0.5);
   }
   
   document.addEventListener('click',
   function(event) {
-      if (event.target.id === "keyboard") {
-          playTone()
+      if (event.target.id === "start") {
+          playTone('start')
       }
   }
 )

@@ -5,6 +5,7 @@ const keyValues = { "A":"C", "W":"C#", "S":"D", "E":"Eb", "D":"E", "F":"F" , "R"
 const song1 = ["C", "D", "E", "F", "G", "A", "B", ""] //demo song
 
 
+//Plays note
 function playTone(note, callback) {
     let frequency = frequencyList[note]
     let osc = ac.createOscillator();
@@ -30,11 +31,10 @@ function playMelody(){
 	}
 }
 
-
 //plays note when clicking keyboard
 document.addEventListener('click',
   function(event) {
-        if (event.target.className === "ivory") {
+        if (event.target.className.includes('note')) {
             let note = event.target.dataset.note
             playTone(note)
         }
@@ -43,5 +43,5 @@ document.addEventListener('click',
 
 //plays note when pressing key
 document.addEventListener('keydown',
-(event) => {  playTone(keyValues[event.key.toUpperCase()])    }
+(event) => {playTone(keyValues[event.key.toUpperCase()])}
 )

@@ -34,7 +34,7 @@ body {
     margin: 0 auto;
     display:flex;
 }
-.ivory:active {
+.ivory:active, .active {
     background: #fff7ae;
     transform: skew(0.5deg, 0deg);
     box-shadow: 2px 2px #7474ff;

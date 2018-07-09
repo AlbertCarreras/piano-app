@@ -1,18 +1,27 @@
 body {
     padding:0px;
     margin:0px;
+    font-family: 'Raleway Dots', cursive;
 }
+
+h1 {    
+    font-weight: 100;
+    font-size: 3em;
+    color: #c684d3;
+    font-family: 'Raleway Dots', cursive;
+}
+
 .container {
-    padding-top: 15em;
-    width:100%;
+    padding-top: 5em;
+    width:25em;
+    margin: 0 auto;
 }
 
 #keys {
     height: 13em;
-    width: 25em;
+    width: 100%;
     display: flex;
     flex: 8;
-    margin: 0 auto;
     justify-content: center;
     background: #2b2abb;
     box-shadow: 3px 3px #c585d2;
@@ -47,6 +56,7 @@ body {
     background: #fffef6;
     box-shadow: 2px 3px #7474ff;
     border-radius: 0px 0px 0.5em 0.5em;
+    padding-bottom: 0.25em;
 }
 
 .ivory:active, .ebony:active, .active {

@@ -6,11 +6,27 @@ body {
     width:100%;
 }
 .top {
-    max-width: 40em;
-    margin: 0 auto;
-    display:flex;
-    z-index:100;
+    display: flex;
+    z-index: 100;
     position: absolute;
+
+}
+.c-f {
+    flex: 1 1 auto;
+    height: 200px;
+}
+
+.c-f .ebony {
+    margin-left: 2em;
+}
+
+.a-b {
+    flex: 1 1 auto;
+    height: 200px;
+}
+
+.a-b .ebony {
+    margin-left: 2em;
 }
 
 .bottom {
@@ -18,13 +34,21 @@ body {
     margin: 0 auto;
     display:flex;
 }
-
+.ivory:active {
+    background: #fff7ae;
+    transform: skew(0.5deg, 0deg);
+    box-shadow: 2px 2px #7474ff;
+    transition: .1s;
+}
 
 .ivory {
     flex: 1 1 auto;
-    height: 400px;
-    border: 1px solid #000;
-}
+    height: 280px;
+    border: 2px solid #bce1ff;
+    background: #fffef6;
+    box-shadow: 2px 3px #7474ff;
+    border-radius: 0px 0px 8px 8px;
+    margin: 0 4px;}
 
 .ebony {
     flex: 1 1 auto;

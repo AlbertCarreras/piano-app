@@ -1,13 +1,13 @@
 const ac = new AudioContext();
 
-function playTone() {
+function playTone(note) {
     var osc = ac.createOscillator();
 
     osc.type = 'sawtooth';
   
     osc.connect(ac.destination);
 
-    osc.frequency.value = 100;
+    osc.frequency.value = note;
     osc.start();
     osc.stop(ac.currentTime + 0.5);
   }
@@ -15,7 +15,8 @@ function playTone() {
   document.addEventListener('click',
   function(event) {
       if (event.target.id === "start") {
-          playTone('start')
+          let note = event.target.dataset.note
+          playTone(note)
       }
   }
 )

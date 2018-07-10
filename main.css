@@ -8,7 +8,6 @@ h1 {
     font-weight: 100;
     font-size: 3em;
     color: #c684d3;
-    font-family: 'Raleway Dots', cursive;
 }
 
 .container {
@@ -64,7 +63,6 @@ h1 {
     box-shadow: 2px 2px #7474ff;
     transition: .1s;
 }
-
 
 /* embarrassing */
 div#E {

@@ -58,7 +58,7 @@ document.addEventListener('keydown',
 
 document.addEventListener('keyup',
    event => stopTone( keyValues[event.key.toUpperCase()] )
-   Array.from( document.getElementsByClassName('note')).forEach(element => element.style="")
+
 )
 
 

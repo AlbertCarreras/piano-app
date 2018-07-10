@@ -53,7 +53,7 @@ function stopTone(note, callback) {
 //plays note when pressing key
 document.addEventListener('keydown',
     function (event) {
-        console.log('keydown ' + aBool)
+        console.log('keydown ' + aBool + " " + event.key)
            if (aBool) {playTone(keyValues[event.key.toUpperCase()])}
         } 
 )

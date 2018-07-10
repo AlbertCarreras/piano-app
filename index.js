@@ -47,9 +47,23 @@ document.addEventListener('click',
 )
 
 //plays note when pressing key
+let keyBool = true
+
 document.addEventListener('keydown',
-function (event) {
-    playTone(keyValues[event.key.toUpperCase()])
-    console.log(event)
-}
+    function (event) {
+        if (keyBool) {
+            playTone(keyValues[event.key.toUpperCase()])
+            console.log(event)
+            keyBool = false
+        } 
+    }
+)
+
+document.addEventListener('keyup',
+    function (event) {
+        if (!keyBool) {
+            console.log(event)
+            keyBool = true
+        }
+    }
 )

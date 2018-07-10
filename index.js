@@ -3,7 +3,7 @@ const frequencyList = {"C": 32.70, "C#":34.65, "D":36.71, "Eb":38.89,	"E":41.20,
 const keyValues = { "A":"C", "W":"C#", "S":"D", "E":"Eb", "D":"E", "F":"F" , "R":"F#", "G":"G" , "T":"G#", "H":"A" , "Y":"Bb", "J":"B" } //key - note hash for keypress
 const noteObjects = {}
 
-const song1 = ["C#", "C#", "Eb", "F", "G", "A", "B"] //demo song
+const song1 = ["C", "F#", "Eb", "F", "G", "A", "B"] //demo song
 let notes = []
 
 createNotes()
@@ -44,7 +44,9 @@ function stopTone(note, callback) {
     if (callback) {osc.onended = function() {
         Array.from( document.getElementsByClassName('note')).forEach(element => element.style="")
         callback();
-        }
+         } 
+    } else {
+        Array.from( document.getElementsByClassName('note')).forEach(element => element.style="")
     }
 }
 
@@ -71,7 +73,7 @@ function playMelody(){
 	if (notes.length > 0){
         let note = notes.shift();
         console.log(note)
-        playTone(note[0], playMelody);
+        playTone(note, playMelody);
 	}
 }
 
@@ -81,6 +83,7 @@ document.addEventListener('click',
         if (event.target.className.includes('note')) {
             let note = event.target.dataset.note
             playTone(note)
+            stopTone(note)
         }
     }
 )

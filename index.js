@@ -1,25 +1,60 @@
 const ac = new AudioContext();
 const frequencyList = {"C": 32.70, "C#":34.65, "D":36.71, "Eb":38.89,	"E":41.20, "F":43.65, "F#":46.25,	"G":49.00, "G#":51.91,	"A":55.00,	"Bb":58.27,	"B":61.74} //frequency - key hash
 const keyValues = { "A":"C", "W":"C#", "S":"D", "E":"Eb", "D":"E", "F":"F" , "R":"F#", "G":"G" , "T":"G#", "H":"A" , "Y":"Bb", "J":"B" } //key - note hash for keypress
+const noteObjects = {}
 
 const song1 = ["C#", "C#", "Eb", "F", "G", "A", "B", ""] //demo song
 let notes = []
 
-//Plays note
-function playTone(note, callback) {
-    let frequency = frequencyList[note]
+createNotes()
+
+function createNotes() {
+    Object.keys(frequencyList).forEach(
+        key => createNote(key)
+    )
+}
+
+function createNote(key) {
+    let frequency = frequencyList[key]
     let osc = ac.createOscillator();
-
     osc.type = 'sawtooth'; //waveform for tone
-
     osc.connect(ac.destination);
     osc.frequency.value = frequency*2.5;
-    osc.start();
-    document.addEventListener('keyup',
-        function() {osc.stop(ac.currentTime)}
-    )
+    noteObjects[key] = osc;
+}
+
+//Plays note
+let aBool = true
+
+function playTone(note, callback) {
+    let osc = noteObjects[note]
+        osc.start();
+        aBool = false
+        console.log('playtone ' + aBool)
     if (callback) {osc.onended = callback}
 }
+
+function stopTone(note, callback) {
+    let osc = noteObjects[note]
+    osc.stop();
+    aBool = true
+    console.log('stopTone '+ aBool)
+    createNote(note)
+    if (callback) {osc.onended = callback}
+}
+
+//plays note when pressing key
+document.addEventListener('keydown',
+    function (event) {
+        console.log('keydown ' + aBool)
+           if (aBool) {playTone(keyValues[event.key.toUpperCase()])}
+        } 
+)
+
+document.addEventListener('keyup',
+   event => stopTone( keyValues[event.key.toUpperCase()] )
+)
+
 
 //iterates over the array and plays the song
 function playSong(song) {
@@ -46,24 +81,3 @@ document.addEventListener('click',
     }
 )
 
-//plays note when pressing key
-let keyBool = true
-
-document.addEventListener('keydown',
-    function (event) {
-        if (keyBool) {
-            playTone(keyValues[event.key.toUpperCase()])
-            console.log(event)
-            keyBool = false
-        } 
-    }
-)
-
-document.addEventListener('keyup',
-    function (event) {
-        if (!keyBool) {
-            console.log(event)
-            keyBool = true
-        }
-    }
-)

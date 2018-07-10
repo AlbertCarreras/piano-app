@@ -85,5 +85,5 @@ document.addEventListener('click',
             playTone(note)
             stopTone(note)
         }
-    }
+  }
 )

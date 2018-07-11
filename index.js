@@ -31,9 +31,13 @@ function createNote(key) {
 createNotes()
 
 //PLAYING FUNCTIONALITY
+OscillatorNode.prototype.startTime = function () { this.starter = ac.currentTime; console.log(this.starter)}
 //Plays notes from playSong() and eventlisteners
 function playTone(note, callback, duration) {
-    let osc = noteObjects[note]
+    // acStart = ac.currentTime
+    createNote(note);
+        let osc = noteObjects[note]
+    osc.startTime()
         document.getElementById(note).style="background: #fff7ae!important;" //highlights current note
         osc.start();
         aBoolObjects[note] = false;
@@ -46,9 +50,10 @@ function stopTone(note, callback, duration) {
       osc.stop(ac.currentTime + duration);
     } else {
       osc.stop(ac.currentTime + 0.5)
-      console.log("0.5")
     }
     aBoolObjects[note] = true;
+    let length = ac.currentTime - osc.starter
+    console.log(length)
     noteRecorderStart(note) //saves note on Recording Variable
     createNote(note)
     if (callback) {osc.onended = function() {

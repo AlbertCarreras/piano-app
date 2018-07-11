@@ -97,7 +97,7 @@ input {
     font-size: 1em;
     background: #7db97a;
     border: 1px solid #1e0251;
-    color: #091658;
+    color: #055432;
     font-family: 'VT323', cursive;
     box-shadow: inset 0 0px 3px #091658;
 }
@@ -111,7 +111,7 @@ input {
 }
 
 ::placeholder {
-    color: #091658;
+    color: #055432;
     font-family: 'VT323', cursive;
 }
 

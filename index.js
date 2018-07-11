@@ -7,20 +7,30 @@ const noteObjects = {}
 //DYNAMIC VARIABLES
 const aBoolObjects = {}
 
-let notes = [] //temp storage variable for playing songs
+let currentSong = []
 
 //SONG SELECTOR FUNCTIONALITY
-//populates song selector with song options
+//populates song selector with song option
 const songSelector = document.getElementById("song_names")
 function displaySongs(songs) {
    songSelector.innerHTML = ""
-   songs.forEach(function(song){
+   songs.reverse().forEach(function(song){
       songSelector.innerHTML += `
          <option value="${song.id}">${song.name}</option>
       `
    })
 }
 
+const downloadBtn = document.getElementById("download")
+const playBtn = document.getElementById("play")
+
+downloadBtn.addEventListener("click", function(){
+  fetch(`http://localhost:3000/api/v1/songs/${songSelector.value}`).then(r=>r.json()).then(r=> currentSong = r)
+})
+
+playBtn.addEventListener("click", function(){
+  playSong(currentSong.notes)
+})
 
 
 function init() {
@@ -86,6 +96,7 @@ function stopTone(note, callback, duration) {
 
 //REPLAY SONG FUNCTIONALITY
 //iterates over the array and plays the song
+let notes = [] //temp storage variable for playing songs
 function playSong(song) {
     song.forEach
     notes = [...song]

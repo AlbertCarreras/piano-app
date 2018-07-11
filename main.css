@@ -1,14 +1,15 @@
 body {
     padding:0px;
     margin:0px;
-    font-family: 'Raleway Dots', cursive;
     background: #4d4ca9;
+    font-family: 'VT323', cursive;
 }
 
 h1 {
     font-weight: 100;
-    font-size: 3em;
+    font-size: 2.8em;
     color: #fff;
+    font-family: 'Codystar', cursive;
 }
 
 .container {
@@ -18,14 +19,14 @@ h1 {
 }
 
 #keys {
-    height: 13em;
+    height: 14em;
     display: flex;
     flex: 8;
     justify-content: center;
     background: #2522b3;
     border: 2px solid #1e0252;
     box-shadow: inset 0 2px 0 0 #1578f8;
-    padding: 3em 1em 1em 1em;
+    padding: 4em 1em 1em 1em;
     border-radius: 0.5em;
 }
 
@@ -40,9 +41,10 @@ h1 {
     position: relative;
     height: 8em;
     background-color: #2a2abb;
-    box-shadow: 2px 3px #7474ff;
-    border: 2px solid #bce1ff;
-    color: white;
+    box-shadow: 0px 4px #4443b3;
+    border: 2px solid #1e0250;
+    border-top: 2px solid #1e0251;
+    color: #14137b;
     width: 5%;
     margin: 0 -6.2%;
     border-radius: 0px 0px 0.5em 0.5em;
@@ -53,16 +55,18 @@ h1 {
     justify-content: flex-end;
     height: 12em;
     border: 2px solid #bce1ff;
+    border-top: 2px solid #1e0251;
     background: #fffef6;
-    box-shadow: 2px 3px #7474ff;
+    box-shadow: 0px 6px #9393f1;
     border-radius: 0px 0px 0.5em 0.5em;
     padding-bottom: 0.25em;
+    color: #9393f2;
 }
 
 .ivory:active, .ebony:active, .active {
     background: #fff7ae;
-    box-shadow: 2px 2px #7474ff;
-    transition: .1s;
+    box-shadow: 0px 3px #7474ff;
+    transition: 0.1s;
 }
 
 /* embarrassing */
@@ -71,7 +75,7 @@ div#E {
 }
 
 #keys:after {
-    top: 29.5em;
+    top: 31em;
     width: 24.7em;
     margin: 0 auto;
     content: "";
@@ -85,4 +89,41 @@ div#E {
     background: #441dbf;
     box-shadow: 0px 10px #4544bc;
     z-index: -1;
+}
+
+input {
+    padding: 0.25em;
+    min-width: 14em;
+    font-size: 1em;
+    background: #7db97a;
+    border: 1px solid #1e0251;
+    color: #091658;
+    font-family: 'VT323', cursive;
+    box-shadow: inset 0 0px 3px #091658;
+}
+
+.controls {
+    display: inline-block;
+    width: 100%;
+    position: absolute;
+    margin-top: 20px;
+    margin-left: 18px;
+}
+
+::placeholder {
+    color: #091658;
+    font-family: 'VT323', cursive;
+}
+
+button:focus { outline: none }
+
+button {
+    background: #ce88da;
+    color: #760808;
+    border: 1px solid #5b0d0d;
+    border-radius: 8px;
+    padding: 0.25em;
+    box-shadow: 0px 3px #490202;
+    font-family: 'VT323';
+    font-size: 1em;
 }

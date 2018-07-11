@@ -110,14 +110,18 @@ let recording = false
 let newRecording = []//const to let
 
 //RECORDING FUNCTIONALITY
-document.getElementById('record').addEventListener('click',
-  function(event) {
-      recording = !recording
-      console.log(recording)
-      if (recording) {           //reset
-      newRecording = []         //reset
-      }                         //reset
-  }
+const recordBtn = document.getElementById('record')
+recordBtn.addEventListener('click',
+    function(event) {
+        recording = !recording
+        console.log(recording)
+        if (recording) { 
+            recordBtn.style="background:red;color:#fff;" 
+            newRecording = []         
+        } else {
+            recordBtn.style=""
+        }            
+    }
 )
 
 function noteRecorder(note, duration) {

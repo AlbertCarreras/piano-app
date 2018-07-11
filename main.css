@@ -74,7 +74,7 @@ div#E {
     margin-right: 4px;
 }
 
-#keys:after {
+/* #keys:after {
     top: 31em;
     width: 24.7em;
     margin: 0 auto;
@@ -89,9 +89,9 @@ div#E {
     background: #441dbf;
     box-shadow: 0px 10px #4544bc;
     z-index: -1;
-}
+} */
 
-input {
+input, select {
     padding: 0.25em;
     min-width: 14em;
     font-size: 1em;
@@ -109,6 +109,33 @@ input {
     margin-top: 20px;
     margin-left: 18px;
 }
+
+.downloader {
+    display: inline-block;
+    position: absolute;
+    margin-top: 4em;
+    background: #2522b3;
+    border: 2px solid #1e0252;
+    box-shadow: inset 0 2px 0 0 #1578f8;
+    padding: 1em;
+    border-radius: 8px;
+}
+
+/* .downloader:after {
+    top:40em;
+    margin: 0 auto;
+    content: "";
+    position: fixed;
+    height: 1.1em;
+    border-radius: 0 0 8px 8px;
+    pointer-events: none;
+    border-bottom: 2px solid #000001;
+    border-left: 2px solid #000001;
+    border-right: 2px solid #000001;
+    background: #441dbf;
+    box-shadow: 0px 10px #4544bc;
+    z-index: -1;
+} */
 
 ::placeholder {
     color: #055432;

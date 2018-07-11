@@ -49,7 +49,7 @@ function createNotes() {
 function createNote(key) {
     let frequency = frequencyList[key]
     let osc = ac.createOscillator();
-    osc.type = 'sawtooth'; //waveform for tone
+    osc.type = 'square'; //waveform for tone
     osc.connect(ac.destination);
     osc.frequency.value = frequency*2.5;
     noteObjects[key] = osc;

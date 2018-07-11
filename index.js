@@ -59,14 +59,15 @@ function stopTone(note, callback) {
 //REPLAY SONG FUNTIONALITY
 //iterates over the array and plays the song
 function playSong(song) {
+    song.forEach
     notes = [...song]
     playMelody()
 }
 function playMelody(){
 	if (notes.length > 0){
         let note = notes.shift();
-        console.log(note)
-        playTone(note, playMelody);
+        console.log(note.note)
+        playTone(note.note, playMelody);
 	}
 }
 

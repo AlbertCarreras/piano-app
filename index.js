@@ -7,8 +7,22 @@ const noteObjects = {}
 //DYNAMIC VARIABLES
 const aBoolObjects = {}
 
-const song1 = ["C", "F#", "Eb", "F", "G", "A", "B"] //demo song
 let notes = [] //temp storage variable for playing songs
+
+const songSelector = document.getElementById("song_names")
+function displaySongs(songs) {
+   songSelector.innerHTML = ""
+   songs.forEach(function(song){
+      songSelector.innerHTML += `
+         <option value="${song.id}">${song.name}</option>
+      `
+   })
+}
+
+function init() {
+   fetch("http://localhost:3000/api/v1/songs").then(r=>r.json()).then(displaySongs)
+}
+init()
 
 //NOTES
 //builds noteObjects from frequencyList
@@ -115,12 +129,12 @@ recordBtn.addEventListener('click',
     function(event) {
         recording = !recording
         console.log(recording)
-        if (recording) { 
-            recordBtn.style="background:red;color:#fff;" 
-            newRecording = []         
+        if (recording) {
+            recordBtn.style="background:red;color:#fff;"
+            newRecording = []
         } else {
             recordBtn.style=""
-        }            
+        }
     }
 )
 
@@ -135,13 +149,14 @@ function noteRecorder(note, duration) {
 
 //SAVING FUNCTIONALITY
 document.getElementById('save_song').addEventListener('click',
-function () { 
-    let songName = document.getElementById('song_name').value
-    fetch("http://localhost:3000/api/v1/songs", 
-        { method: "POST", 
-        headers: {"Content-Type": "application/json"}, 
-        body: JSON.stringify({name: songName, notes: newRecording})}
-    ).then(r => r.json()).then(console.log) }
+function () {
+    let songName = document.getElementById('song_name')
+    fetch("http://localhost:3000/api/v1/songs",
+        { method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({name: songName.value, notes: newRecording})}
+    ).then(r => r.json()).then(init)
+    songName.value = "Your song was saved! Check the list."
+    setTimeout(()=> songName.value = "", 5000)
+}
 )
-
-fetch("http://localhost:3000/api/v1/songs").then(r => r.json()).then(console.log)

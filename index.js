@@ -66,7 +66,7 @@ function stopTone(note, callback, duration) {
     }
 }
 
-//REPLAY SONG FUNTIONALITY
+//REPLAY SONG FUNCTIONALITY
 //iterates over the array and plays the song
 function playSong(song) {
     song.forEach
@@ -130,19 +130,14 @@ function noteRecorder(note, duration) {
 }
 
 //SAVING FUNCTIONALITY
-function fetchNotes(songId){
-  const url = "http://localhost:3000/api/v1/notes"
-  newRecording.forEach(function(note){
-    const data = {song_id: songId, note: note.note ,time_in: note.time_in , duration: note.duration }
-    const configObj = {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)}
-    fetch(url, configObj).then(r => json(r)).then(console.log)
-  })
-}
-
 document.getElementById('save_song').addEventListener('click',
-  const nameSong =  document.getElementById('save_name_song').value
-  const url = "http://localhost:3000/api/v1/songs"
-  const data = {name: nameSong}
-  const configObj = {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)}
-  fetch(url, configObj).then(r => json(r)).then(r=>fetchNotes(r.id))
+function () { 
+    let songName = document.getElementById('song_name').value
+    fetch("http://localhost:3000/api/v1/songs", 
+        { method: "POST", 
+        headers: {"Content-Type": "application/json"}, 
+        body: JSON.stringify({name: songName, notes: newRecording})}
+    ).then(r => r.json()).then(console.log) }
 )
+
+fetch("http://localhost:3000/api/v1/songs").then(r => r.json()).then(console.log)

@@ -32,20 +32,24 @@ createNotes()
 
 //PLAYING FUNCTIONALITY
 //Plays notes from playSong() and eventlisteners
-function playTone(note, callback) {
+function playTone(note, callback, duration) {
     let osc = noteObjects[note]
         document.getElementById(note).style="background: #fff7ae!important;" //highlights current note
         osc.start();
         aBoolObjects[note] = false;
-        noteRecorderStart(note)
-    if (callback) {stopTone(note, callback)}
+    if (callback) {stopTone(note, callback, duration)}
 }
 
-function stopTone(note, callback) {
+function stopTone(note, callback, duration) {
     let osc = noteObjects[note]
-    osc.stop(ac.currentTime + 0.5);
+    if (duration) {
+      osc.stop(ac.currentTime + duration);
+    } else {
+      osc.stop(ac.currentTime + 0.5)
+      console.log("0.5")
+    }
     aBoolObjects[note] = true;
-    // noteRecorderStop(note)
+    noteRecorderStart(note) //saves note on Recording Variable
     createNote(note)
     if (callback) {osc.onended = function() {
         Array.from( document.getElementsByClassName('note')).forEach(element => element.style="")
@@ -67,7 +71,7 @@ function playMelody(){
 	if (notes.length > 0){
         let note = notes.shift();
         console.log(note.note)
-        playTone(note.note, playMelody);
+        playTone(note.note, playMelody, note.duration);
 	}
 }
 
@@ -75,13 +79,14 @@ function playMelody(){
 //plays note when pressing key
 document.addEventListener('keydown',
     function (event) {
-           if (aBoolObjects[keyValues[event.key.toUpperCase()]]) {playTone(keyValues[event.key.toUpperCase()])}
+      if (aBoolObjects[keyValues[event.key.toUpperCase()]]) {playTone(keyValues[event.key.toUpperCase()])}
         }
 )
 
 document.addEventListener('keyup',
-   event => stopTone( keyValues[event.key.toUpperCase()] )
-
+   function (event){
+     stopTone( keyValues[event.key.toUpperCase()] )
+   }
 )
 
 //plays note when clicking keyboard
@@ -98,7 +103,7 @@ document.addEventListener('click',
 let recording = false
 const newRecording = []
 
-//Records song
+//RECORDING FUNCTIONALITY
 document.getElementById('record').addEventListener('click',
   function(event) {
       recording = !recording
@@ -110,7 +115,7 @@ function noteRecorderStart(note) {
     if (recording === false) {
         return
     } else {
-        let newNote = new Note(note, 1) 
+        let newNote = new Note(note, Math.random()*2)
         newRecording.push(newNote)
     }
 }

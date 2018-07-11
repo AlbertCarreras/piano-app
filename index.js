@@ -9,6 +9,8 @@ const aBoolObjects = {}
 
 let notes = [] //temp storage variable for playing songs
 
+//SONG SELECTOR FUNCTIONALITY
+//populates song selector with song options
 const songSelector = document.getElementById("song_names")
 function displaySongs(songs) {
    songSelector.innerHTML = ""
@@ -18,6 +20,8 @@ function displaySongs(songs) {
       `
    })
 }
+
+
 
 function init() {
    fetch("http://localhost:3000/api/v1/songs").then(r=>r.json()).then(displaySongs)

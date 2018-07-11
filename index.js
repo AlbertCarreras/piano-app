@@ -31,16 +31,17 @@ function createNote(key) {
 createNotes()
 
 //PLAYING FUNCTIONALITY
-OscillatorNode.prototype.startTime = function () { this.starter = ac.currentTime; console.log(this.starter)}
+//monkey patching adding startTime function to OscillatorNode to save ac.currentTime on each instance
+OscillatorNode.prototype.startTime = function () { this.starter = ac.currentTime}
+
 //Plays notes from playSong() and eventlisteners
 function playTone(note, callback, duration) {
-    // acStart = ac.currentTime
     createNote(note);
-        let osc = noteObjects[note]
+    let osc = noteObjects[note]
     osc.startTime()
-        document.getElementById(note).style="background: #fff7ae!important;" //highlights current note
-        osc.start();
-        aBoolObjects[note] = false;
+    document.getElementById(note).style="background: #fff7ae!important;" //highlights current note
+    osc.start();
+    aBoolObjects[note] = false;
     if (callback) {stopTone(note, callback, duration)}
 }
 
@@ -52,9 +53,9 @@ function stopTone(note, callback, duration) {
       osc.stop(ac.currentTime + 0.5)
     }
     aBoolObjects[note] = true;
-    let length = ac.currentTime - osc.starter
-    console.log(length)
-    noteRecorderStart(note) //saves note on Recording Variable
+    let lengthSecNote = ac.currentTime - osc.starter // note duration
+    console.log(lengthSecNote)
+    noteRecorder(note, lengthSecNote) //saves note on Recording Variable
     createNote(note)
     if (callback) {osc.onended = function() {
         Array.from( document.getElementsByClassName('note')).forEach(element => element.style="")
@@ -116,19 +117,11 @@ document.getElementById('record').addEventListener('click',
   }
 )
 
-function noteRecorderStart(note) {
+function noteRecorder(note, duration) {
     if (recording === false) {
         return
     } else {
         let newNote = new Note(note, Math.random()*2)
         newRecording.push(newNote)
-    }
-}
-
-function noteRecorderStop(note) {
-    if (recording === false) {
-        return
-    } else {
-        return
     }
 }

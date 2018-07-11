@@ -107,13 +107,16 @@ document.addEventListener('click',
 )
 
 let recording = false
-const newRecording = []
+let newRecording = []//const to let
 
 //RECORDING FUNCTIONALITY
 document.getElementById('record').addEventListener('click',
   function(event) {
       recording = !recording
       console.log(recording)
+      if (recording) {           //reset
+      newRecording = []         //reset
+      }                         //reset
   }
 )
 
@@ -121,7 +124,25 @@ function noteRecorder(note, duration) {
     if (recording === false) {
         return
     } else {
-        let newNote = new Note(note, Math.random()*2)
+        let newNote = new Note(note, duration)
         newRecording.push(newNote)
     }
 }
+
+//SAVING FUNCTIONALITY
+function fetchNotes(songId){
+  const url = "http://localhost:3000/api/v1/notes"
+  newRecording.forEach(function(note){
+    const data = {song_id: songId, note: note.note ,time_in: note.time_in , duration: note.duration }
+    const configObj = {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)}
+    fetch(url, configObj).then(r => json(r)).then(console.log)
+  })
+}
+
+document.getElementById('save_song').addEventListener('click',
+  const nameSong =  document.getElementById('save_name_song').value
+  const url = "http://localhost:3000/api/v1/songs"
+  const data = {name: nameSong}
+  const configObj = {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)}
+  fetch(url, configObj).then(r => json(r)).then(r=>fetchNotes(r.id))
+)

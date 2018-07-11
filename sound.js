@@ -1,10 +1,8 @@
 //currently not in use
 
-class Sound {
+class Note {
     constructor(frequency) {
-        this.osc = ac.createOscillator();
-        this.osc.frequency.value = frequency;
-        this.osc.start(0);
+        this.note = note
     }
 
     play() {

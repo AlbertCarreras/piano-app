@@ -37,7 +37,7 @@ function playTone(note, callback) {
         document.getElementById(note).style="background: #fff7ae!important;" //highlights current note
         osc.start();
         aBoolObjects[note] = false;
-        console.log(aBoolObjects)
+        noteRecorderStart(note)
     if (callback) {stopTone(note, callback)}
 }
 
@@ -45,7 +45,7 @@ function stopTone(note, callback) {
     let osc = noteObjects[note]
     osc.stop(ac.currentTime + 0.5);
     aBoolObjects[note] = true;
-    console.log(aBoolObjects)
+    // noteRecorderStop(note)
     createNote(note)
     if (callback) {osc.onended = function() {
         Array.from( document.getElementsByClassName('note')).forEach(element => element.style="")
@@ -74,7 +74,6 @@ function playMelody(){
 //plays note when pressing key
 document.addEventListener('keydown',
     function (event) {
-        console.log('keydown ' + aBoolObjects[keyValues[event.key.toUpperCase()]])
            if (aBoolObjects[keyValues[event.key.toUpperCase()]]) {playTone(keyValues[event.key.toUpperCase()])}
         }
 )
@@ -94,3 +93,31 @@ document.addEventListener('click',
         }
   }
 )
+
+let recording = false
+const newRecording = []
+
+//Records song
+document.getElementById('record').addEventListener('click',
+  function(event) {
+      recording = !recording
+      console.log(recording)
+  }
+)
+
+function noteRecorderStart(note) {
+    if (recording === false) {
+        return
+    } else {
+        let newNote = new Note(note, 1) 
+        newRecording.push(newNote)
+    }
+}
+
+function noteRecorderStop(note) {
+    if (recording === false) {
+        return
+    } else {
+        return
+    }
+}

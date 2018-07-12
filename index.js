@@ -89,7 +89,7 @@ function stopTone(note, duration, timeIn) {
     if (duration) {
       osc.stop(ac.currentTime + timeIn + duration);
     } else {
-      osc.stop(ac.currentTime + 0.5)
+      osc.stop()
     }
     aBoolObjects[note] = true;
     let lengthSecNote = ac.currentTime - osc.starter // note duration
@@ -113,7 +113,7 @@ function playSong(song) {
 //plays note when pressing key
 document.addEventListener('keydown',
     function (event) {
-      if (aBoolObjects[keyValues[event.key.toUpperCase()]]) { 
+      if (aBoolObjects[keyValues[event.key.toUpperCase()]]) {
           playTone(keyValues[event.key.toUpperCase()])
         }
     }
@@ -121,28 +121,36 @@ document.addEventListener('keydown',
 
 document.addEventListener('keyup',
    function (event){
-    if (aBoolObjects[keyValues[event.key.toUpperCase()]] == false) { 
+    if (aBoolObjects[keyValues[event.key.toUpperCase()]] == false) {
         stopTone( keyValues[event.key.toUpperCase()] )
     }
    }
 )
 
 //plays note when clicking keyboard
-document.addEventListener('click',
+document.addEventListener('mousedown',
   function(event) {
         if (event.target.className.includes('note')) {
             let note = event.target.dataset.note
             playTone(note)
+        }
+  }
+)
+
+document.addEventListener('mouseup',
+  function(event) {
+        if (event.target.className.includes('note')) {
+            let note = event.target.dataset.note
             stopTone(note)
         }
   }
 )
 
+//RECORDING FUNCTIONALITY
 let recording = false
 let newRecording = []//const to let
 let newRecordingTimeIn
 
-//RECORDING FUNCTIONALITY
 const recordBtn = document.getElementById('record')
 recordBtn.addEventListener('click',
     function(event) {
@@ -181,7 +189,7 @@ saveBtn.addEventListener('click',
         saveBtn.style="background:red;color:#fff;";
         saveBtn.innerHTML = "Saving";
         setTimeout(function() { saveBtn.style= ""; saveBtn.innerHTML = "Save"; songName.value = "Your song was saved! Check the list." }, 1000);
-        
+
         let songName = document.getElementById('song_name')
 
         fetch("http://localhost:3000/api/v1/songs",
@@ -191,7 +199,7 @@ saveBtn.addEventListener('click',
         ).then(r => r.json()).then(init)
 
         currentSong = {name: songName.value, notes: newRecording}
-        
+
         setTimeout(()=> songName.value = "", 5000)
     }
 )

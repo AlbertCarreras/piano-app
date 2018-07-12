@@ -74,7 +74,7 @@ playBtn.addEventListener("click", function(){ //plays selected song when play is
     playSong(currentSong)
     playBtn.disabled = true
     playBtn.style="background:grey;color:#fff;"
-    setTimeout(() => { playBtn.disabled = false; playBtn.style="" }, 3000)
+    setTimeout(() => { playBtn.disabled = false; playBtn.style="" }, endNoteTime*1000)
 })
 
 //NOTES
@@ -157,9 +157,11 @@ function singleNoteStopper(osc, note) {
 
 //REPLAY SONG FUNCTIONALITY
 //iterates over the array and plays the song
+let endNoteTime = ""
 function playSong(song) {
     song.notes.forEach(
-        note => playNote(note.note, note.duration, note.time_in)
+        note => { playNote(note.note, note.duration, note.time_in); endNoteTime = note.time_in + note.duration }
+        
     )
  }
 

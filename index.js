@@ -7,8 +7,6 @@ const noteObjects = {}
 //DYNAMIC VARIABLES
 const aBoolObjects = {}
 
-let currentSong = []
-
 //VOLUME FUNCTIONALITY
 const masterGainNode = ac.createGain();
 masterGainNode.connect(ac.destination);
@@ -38,13 +36,17 @@ function displaySongs(songs) {
 //play button and song variables
 const playBtn = document.getElementById("play")
 let currentSongId = ""
-
+let currentSong = []
 //changes/downloads song when selector is changed
+
+function getSong() {
+    fetch(`http://localhost:3000/api/v1/songs/${songSelector.value}`).then(r=>r.json()).then(r => {currentSong = r; currentSongId = r.id; console.log(r)})
+}
 songSelector.addEventListener("change", function(){
     if (currentSongId === songSelector.value) {
         return
     } else {
-        fetch(`http://localhost:3000/api/v1/songs/${songSelector.value}`).then(r=>r.json()).then(r => {currentSong = r; console.log(r)})
+        getSong()
     }
 })
 
@@ -53,8 +55,9 @@ playBtn.addEventListener("click", function(){
 })
 
 function init() {
-   fetch("http://localhost:3000/api/v1/songs").then(r=>r.json()).then(displaySongs)
+   fetch("http://localhost:3000/api/v1/songs").then(r=>r.json()).then(r => {displaySongs(r); getSong()})
 }
+
 init()
 
 //NOTES
@@ -93,7 +96,8 @@ function playTone(note, duration, timeIn) {
     if (timeIn) {
         osc.start(ac.currentTime + timeIn);
         stopTone(note, duration, timeIn);
-    } else { osc.start() }
+        console.log(osc);
+    } else { osc.start(); console.log(osc) }
     aBoolObjects[note] = false;
 }
 
@@ -127,6 +131,7 @@ function playSong(song) {
 document.addEventListener('keydown',
     function (event) {
       if (aBoolObjects[keyValues[event.key.toUpperCase()]]) {
+          console.log(keyValues[event.key.toUpperCase()])
           playTone(keyValues[event.key.toUpperCase()])
         }
     }

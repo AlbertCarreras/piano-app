@@ -72,6 +72,9 @@ songSelector.addEventListener("change", function(){ //checks if new song is chos
 
 playBtn.addEventListener("click", function(){ //plays selected song when play is clicked
     playSong(currentSong)
+    playBtn.disabled = true
+    playBtn.style="background:grey;color:#fff;"
+    setTimeout(() => { playBtn.disabled = false; playBtn.style="" }, 3000)
 })
 
 //NOTES

@@ -12,6 +12,7 @@ let currentSong = []
 //SONG SELECTOR FUNCTIONALITY
 //populates song selector with song option
 const songSelector = document.getElementById("song_names")
+
 function displaySongs(songs) {
    songSelector.innerHTML = ""
    songs.reverse().forEach(function(song){
@@ -21,21 +22,24 @@ function displaySongs(songs) {
    })
 }
 
-const downloadBtn = document.getElementById("download")
+//play button and song variables
 const playBtn = document.getElementById("play")
 let currentSongId = ""
 
-downloadBtn.addEventListener("click", function(){
+//changes/downloads song when selector is changed
+songSelector.addEventListener("change", function(){
     if (currentSongId === songSelector.value) {
         return
     } else {
-        fetch(`http://localhost:3000/api/v1/songs/${songSelector.value}`).then(r=>r.json()).then(r=> currentSong = r)
+        fetch(`http://localhost:3000/api/v1/songs/${songSelector.value}`).then(r=>r.json()).then(r => {currentSong = r; console.log(r)})
     }
 })
 
 playBtn.addEventListener("click", function(){
   playSong(currentSong.notes)
 })
+
+
 
 
 function init() {
@@ -119,13 +123,17 @@ function playMelody(){
 //plays note when pressing key
 document.addEventListener('keydown',
     function (event) {
-      if (aBoolObjects[keyValues[event.key.toUpperCase()]]) {playTone(keyValues[event.key.toUpperCase()])}
+      if (aBoolObjects[keyValues[event.key.toUpperCase()]]) { 
+          playTone(keyValues[event.key.toUpperCase()])
         }
+    }
 )
 
 document.addEventListener('keyup',
    function (event){
-     stopTone( keyValues[event.key.toUpperCase()] )
+    if (aBoolObjects[keyValues[event.key.toUpperCase()]] == false) { 
+        stopTone( keyValues[event.key.toUpperCase()] )
+    }
    }
 )
 
@@ -150,10 +158,16 @@ recordBtn.addEventListener('click',
         recording = !recording
         console.log(recording)
         if (recording) {
+            recordBtn.innerHTML = "Stop"
             recordBtn.style="background:red;color:#fff;"
+            saveBtn.style="background:grey;color:#fff;"
+            saveBtn.disabled = true
             newRecording = []
         } else {
+            recordBtn.innerHTML = "Record"
             recordBtn.style=""
+            saveBtn.disabled = false
+            saveBtn.style=""
         }
     }
 )
@@ -168,15 +182,24 @@ function noteRecorder(note, duration) {
 }
 
 //SAVING FUNCTIONALITY
-document.getElementById('save_song').addEventListener('click',
-function () {
-    let songName = document.getElementById('song_name')
-    fetch("http://localhost:3000/api/v1/songs",
-        { method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({name: songName.value, notes: newRecording})}
-    ).then(r => r.json()).then(init)
-    songName.value = "Your song was saved! Check the list."
-    setTimeout(()=> songName.value = "", 5000)
-}
+const saveBtn = document.getElementById('save_song')
+
+saveBtn.addEventListener('click',
+    function () {
+        saveBtn.style="background:red;color:#fff;";
+        saveBtn.innerHTML = "Saving";
+        setTimeout(function() { saveBtn.style= ""; saveBtn.innerHTML = "Save"; songName.value = "Your song was saved! Check the list." }, 1000);
+        
+        let songName = document.getElementById('song_name')
+
+        fetch("http://localhost:3000/api/v1/songs",
+            { method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({name: songName.value, notes: newRecording})}
+        ).then(r => r.json()).then(init)
+
+        currentSong = {name: songName.value, notes: newRecording}
+        
+        setTimeout(()=> songName.value = "", 5000)
+    }
 )

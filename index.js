@@ -150,9 +150,11 @@ recordBtn.addEventListener('click',
         recording = !recording
         console.log(recording)
         if (recording) {
+            recordBtn.innerHTML = "Stop"
             recordBtn.style="background:red;color:#fff;"
             newRecording = []
         } else {
+            recordBtn.innerHTML = "Record"
             recordBtn.style=""
         }
     }
@@ -168,15 +170,19 @@ function noteRecorder(note, duration) {
 }
 
 //SAVING FUNCTIONALITY
-document.getElementById('save_song').addEventListener('click',
+const saveBtn = document.getElementById('save_song')
+saveBtn.addEventListener('click',
 function () {
+    saveBtn.style="background:red;color:#fff;";
+    saveBtn.innerHTML = "Saving";
+    setTimeout(function() {saveBtn.style= ""; saveBtn.innerHTML = "Save"; songName.value = "Your song was saved! Check the list."
+}, 1000);
     let songName = document.getElementById('song_name')
     fetch("http://localhost:3000/api/v1/songs",
         { method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({name: songName.value, notes: newRecording})}
     ).then(r => r.json()).then(init)
-    songName.value = "Your song was saved! Check the list."
     setTimeout(()=> songName.value = "", 5000)
 }
 )

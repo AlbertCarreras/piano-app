@@ -12,6 +12,7 @@ let currentSong = []
 //SONG SELECTOR FUNCTIONALITY
 //populates song selector with song option
 const songSelector = document.getElementById("song_names")
+
 function displaySongs(songs) {
    songSelector.innerHTML = ""
    songs.reverse().forEach(function(song){
@@ -21,21 +22,24 @@ function displaySongs(songs) {
    })
 }
 
-const downloadBtn = document.getElementById("download")
+//play button and song variables
 const playBtn = document.getElementById("play")
 let currentSongId = ""
 
-downloadBtn.addEventListener("click", function(){
+//changes/downloads song when selector is changed
+songSelector.addEventListener("change", function(){
     if (currentSongId === songSelector.value) {
         return
     } else {
-        fetch(`http://localhost:3000/api/v1/songs/${songSelector.value}`).then(r=>r.json()).then(r=> currentSong = r)
+        fetch(`http://localhost:3000/api/v1/songs/${songSelector.value}`).then(r=>r.json()).then(r => {currentSong = r; console.log(r)})
     }
 })
 
 playBtn.addEventListener("click", function(){
   playSong(currentSong.notes)
 })
+
+
 
 
 function init() {
@@ -171,18 +175,23 @@ function noteRecorder(note, duration) {
 
 //SAVING FUNCTIONALITY
 const saveBtn = document.getElementById('save_song')
+
 saveBtn.addEventListener('click',
-function () {
-    saveBtn.style="background:red;color:#fff;";
-    saveBtn.innerHTML = "Saving";
-    setTimeout(function() {saveBtn.style= ""; saveBtn.innerHTML = "Save"; songName.value = "Your song was saved! Check the list."
-}, 1000);
-    let songName = document.getElementById('song_name')
-    fetch("http://localhost:3000/api/v1/songs",
-        { method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({name: songName.value, notes: newRecording})}
-    ).then(r => r.json()).then(init)
-    setTimeout(()=> songName.value = "", 5000)
-}
+    function () {
+        saveBtn.style="background:red;color:#fff;";
+        saveBtn.innerHTML = "Saving";
+        setTimeout(function() { saveBtn.style= ""; saveBtn.innerHTML = "Save"; songName.value = "Your song was saved! Check the list." }, 1000);
+        
+        let songName = document.getElementById('song_name')
+
+        fetch("http://localhost:3000/api/v1/songs",
+            { method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({name: songName.value, notes: newRecording})}
+        ).then(r => r.json()).then(init)
+
+        currentSong = {name: songName.value, notes: newRecording}
+        
+        setTimeout(()=> songName.value = "", 5000)
+    }
 )

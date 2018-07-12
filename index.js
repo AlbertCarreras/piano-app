@@ -9,6 +9,19 @@ const aBoolObjects = {}
 
 let currentSong = []
 
+//VOLUME FUNCTIONALITY
+const masterGainNode = ac.createGain();
+masterGainNode.connect(ac.destination);
+
+let volumeControl = document.querySelector("input[name='volume']");
+masterGainNode.gain.value = volumeControl.value;
+
+function changeVolume(event) {
+  masterGainNode.gain.value = volumeControl.value
+}
+
+volumeControl.addEventListener("change", changeVolume, false);
+
 //SONG SELECTOR FUNCTIONALITY
 //populates song selector with song option
 const songSelector = document.getElementById("song_names")
@@ -59,7 +72,7 @@ function createNote(key) {
     let frequency = frequencyList[key]
     let osc = ac.createOscillator();
     osc.type = 'triangle'; //waveform for tone
-    osc.connect(ac.destination);
+    osc.connect(masterGainNode);
     osc.frequency.value = frequency*8.5;
     noteObjects[key] = osc;
     aBoolObjects[key] = true;

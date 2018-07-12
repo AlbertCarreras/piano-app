@@ -23,9 +23,14 @@ function displaySongs(songs) {
 
 const downloadBtn = document.getElementById("download")
 const playBtn = document.getElementById("play")
+let currentSongId = ""
 
 downloadBtn.addEventListener("click", function(){
-  fetch(`http://localhost:3000/api/v1/songs/${songSelector.value}`).then(r=>r.json()).then(r=> currentSong = r)
+    if (currentSongId === songSelector.value) {
+        return
+    } else {
+        fetch(`http://localhost:3000/api/v1/songs/${songSelector.value}`).then(r=>r.json()).then(r=> currentSong = r)
+    }
 })
 
 playBtn.addEventListener("click", function(){
@@ -49,9 +54,9 @@ function createNotes() {
 function createNote(key) {
     let frequency = frequencyList[key]
     let osc = ac.createOscillator();
-    osc.type = 'square'; //waveform for tone
+    osc.type = 'triangle'; //waveform for tone
     osc.connect(ac.destination);
-    osc.frequency.value = frequency*2.5;
+    osc.frequency.value = frequency*8.5;
     noteObjects[key] = osc;
     aBoolObjects[key] = true;
 }

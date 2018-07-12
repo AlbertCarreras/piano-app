@@ -92,23 +92,25 @@ function playTone(note, duration, timeIn) {
     createNote(note);
     let osc = noteObjects[note]
     osc.startTime()
-    document.getElementById(note).style="background: #fff7ae!important;" //highlights current note
     if (timeIn) {
         osc.start(ac.currentTime + timeIn);
         stopTone(note, duration, timeIn);
+        // setTimeout(()=> document.getElementById(note).style="background: #fff7ae!important", timeIn)
         console.log(osc);
-    } else { osc.start(); console.log(osc) }
-    aBoolObjects[note] = false;
+    } else { 
+        osc.start(); console.log(osc) }
+        aBoolObjects[note] = false;
+        document.getElementById(note).style="background: #fff7ae!important;" //highlights current note
 }
 
 function stopTone(note, duration, timeIn) {
     let osc = noteObjects[note]
-
         if (duration) {
             osc.stop(ac.currentTime + timeIn + duration);
+            // setTimeout(()=> document.getElementById(note).style="", timeIn + duration)
         } else {
-            console.log(osc)
             osc.stop()
+            Array.from( document.getElementsByClassName('note')).forEach(element => element.style="")
         }
 
     aBoolObjects[note] = true;
@@ -118,7 +120,6 @@ function stopTone(note, duration, timeIn) {
 
     noteRecorder(note, lengthSecNote, timeInNote) //saves note on Recording Variable
     // createNote(note)
-    Array.from( document.getElementsByClassName('note')).forEach(element => element.style="")
 }
 
 //REPLAY SONG FUNCTIONALITY

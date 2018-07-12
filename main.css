@@ -112,15 +112,12 @@ input, select {
 }
 
 .controls {
-    display: inline-block;
     position: absolute;
     margin-top: 20px;
     margin-left: 18px;
 }
 
 .downloader {
-    display: inline-block;
-    position: absolute;
     margin-top: 4em;
     background: #2522b3;
     border: 2px solid #1e0252;

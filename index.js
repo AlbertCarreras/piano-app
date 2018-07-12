@@ -123,13 +123,17 @@ function playMelody(){
 //plays note when pressing key
 document.addEventListener('keydown',
     function (event) {
-      if (aBoolObjects[keyValues[event.key.toUpperCase()]]) {playTone(keyValues[event.key.toUpperCase()])}
+      if (aBoolObjects[keyValues[event.key.toUpperCase()]]) { 
+          playTone(keyValues[event.key.toUpperCase()])
         }
+    }
 )
 
 document.addEventListener('keyup',
    function (event){
-     stopTone( keyValues[event.key.toUpperCase()] )
+    if (aBoolObjects[keyValues[event.key.toUpperCase()]] == false) { 
+        stopTone( keyValues[event.key.toUpperCase()] )
+    }
    }
 )
 
@@ -156,10 +160,14 @@ recordBtn.addEventListener('click',
         if (recording) {
             recordBtn.innerHTML = "Stop"
             recordBtn.style="background:red;color:#fff;"
+            saveBtn.style="background:grey;color:#fff;"
+            saveBtn.disabled = true
             newRecording = []
         } else {
             recordBtn.innerHTML = "Record"
             recordBtn.style=""
+            saveBtn.disabled = false
+            saveBtn.style=""
         }
     }
 )

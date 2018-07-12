@@ -71,7 +71,7 @@ const customWaveform = ac.createPeriodicWave(cosineTerms, sineTerms);
 function createNote(key) {
     let frequency = frequencyList[key]
     let osc = ac.createOscillator();
-    osc.type = customWaveform; //waveform for tone
+    osc.setPeriodicWave(customWaveform); //waveform for tone
     osc.frequency.value = frequency*document.getElementById('frqRange').value;
     osc.connect(masterGainNode);
     noteObjects[key] = osc;
@@ -92,7 +92,7 @@ function playTone(note, duration, timeIn) {
     document.getElementById(note).style="background: #fff7ae!important;" //highlights current note
     if (timeIn) {
         osc.start(ac.currentTime + timeIn);
-        stopTone(note, duration, timeIn); 
+        stopTone(note, duration, timeIn);
     } else { osc.start() }
     aBoolObjects[note] = false;
 }

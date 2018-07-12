@@ -103,17 +103,21 @@ function playTone(note, duration, timeIn) {
 
 function stopTone(note, duration, timeIn) {
     let osc = noteObjects[note]
-    if (duration) {
-      osc.stop(ac.currentTime + timeIn + duration);
-    } else {
-      osc.stop()
-    }
+
+        if (duration) {
+            osc.stop(ac.currentTime + timeIn + duration);
+        } else {
+            console.log(osc)
+            osc.stop()
+        }
+
     aBoolObjects[note] = true;
+
     let lengthSecNote = ac.currentTime - osc.starter // note duration
     let timeInNote = osc.starter - newRecordingTimeIn
-    console.log(lengthSecNote)
+
     noteRecorder(note, lengthSecNote, timeInNote) //saves note on Recording Variable
-    createNote(note)
+    // createNote(note)
     Array.from( document.getElementsByClassName('note')).forEach(element => element.style="")
 }
 

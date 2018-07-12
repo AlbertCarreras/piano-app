@@ -39,9 +39,6 @@ playBtn.addEventListener("click", function(){
   playSong(currentSong.notes)
 })
 
-
-
-
 function init() {
    fetch("http://localhost:3000/api/v1/songs").then(r=>r.json()).then(displaySongs)
 }
@@ -60,7 +57,7 @@ function createNote(key) {
     let osc = ac.createOscillator();
     osc.type = 'triangle'; //waveform for tone
     osc.connect(ac.destination);
-    osc.frequency.value = frequency*8.5;
+    osc.frequency.value = frequency*document.getElementById('frqRange').value;
     noteObjects[key] = osc;
     aBoolObjects[key] = true;
 }

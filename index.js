@@ -127,21 +127,28 @@ function singleNoteStarter(osc, note) {
 
 function stopNote(note, duration, timeIn) {
     let osc = noteObjects[note]
-        if (duration) {
-            osc.stop(ac.currentTime + timeIn + duration);
-            setTimeout(()=> getKey(note).style="", (timeIn + duration)*1000)
-        } else {
-            osc.stop()
-            Array.from( document.getElementsByClassName('note') ).forEach(element => element.style="")
-        }
+
+    if (duration) {
+        songNoteStopper(note, duration, timeIn, osc)
+    } else {
+        singleNoteStopper(osc, note)
+    }
 
     aBoolObjects[note] = true;
 
     let lengthSecNote = ac.currentTime - osc.starter // note duration
     let timeInNote = osc.starter - newRecordingTimeIn
-
     noteRecorder(note, lengthSecNote, timeInNote) //saves note on Recording Variable
-    // createNote(note)
+}
+
+function songNoteStopper(note, duration, timeIn, osc) {
+    osc.stop(ac.currentTime + timeIn + duration);
+    setTimeout(()=> getKey(note).style="", (timeIn + duration)*1000)
+}
+
+function singleNoteStopper(osc, note) {
+    osc.stop()
+    getKey(note).style=""
 }
 
 //REPLAY SONG FUNCTIONALITY

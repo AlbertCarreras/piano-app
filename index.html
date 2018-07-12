@@ -6,12 +6,16 @@
     <title>Keyboard Game</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <link href="https://fonts.googleapis.com/css?family=Raleway+Dots" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-            <h1>Piano Friend 👋</h1>
-
+            <h1>Piano Friend ☻</h1>
+            <div class="controls">
+                    <input type="text" id="song_name" placeholder="Your Song Name"></input>
+                    <button id="record">Record</button>
+                    <button id="save_song">Save</button>
+                </div>
             <div id="keys">
                 <div class="note ivory" id="C" data-note="C">C</div>
                 <div class="note ebony" id="C#" data-note="C#">C#</div>
@@ -26,7 +30,14 @@
                 <div class="note ebony" id="Bb" data-note="Bb">Bb</div>
                 <div class="note ivory" id="B" data-note="B">B</div>
             </div>
+            <div class="downloader">
+                        <select id="song_names">
+                        </select>
+                        <button id="download">Download</button>
+                        <button id="play">Play</button>
+            </div>      
     </div>
 </body>
+<script src="note.js"></script>
 <script src="index.js"></script>
 </html>

@@ -36,7 +36,7 @@ songSelector.addEventListener("change", function(){
 })
 
 playBtn.addEventListener("click", function(){
-  playSong(currentSong.notes)
+  playSong(currentSong)
 })
 
 function init() {
@@ -51,11 +51,14 @@ function createNotes() {
         key => createNote(key)
     )
 }
+const sineTerms = new Float32Array([0, 0, 1, 0, 1]);
+const cosineTerms = new Float32Array(sineTerms.length);
+const customWaveform = ac.createPeriodicWave(cosineTerms, sineTerms);
 
 function createNote(key) {
     let frequency = frequencyList[key]
     let osc = ac.createOscillator();
-    osc.type = 'triangle'; //waveform for tone
+    osc.type = customWaveform; //waveform for tone
     osc.connect(ac.destination);
     osc.frequency.value = frequency*document.getElementById('frqRange').value;
     noteObjects[key] = osc;
@@ -69,52 +72,42 @@ createNotes()
 OscillatorNode.prototype.startTime = function () { this.starter = ac.currentTime}
 
 //Plays notes from playSong() and eventlisteners
-function playTone(note, callback, duration) {
+function playTone(note, duration, timeIn) {
     createNote(note);
     let osc = noteObjects[note]
     osc.startTime()
     document.getElementById(note).style="background: #fff7ae!important;" //highlights current note
-    osc.start();
+    if (timeIn) {
+        osc.start(ac.currentTime + timeIn);
+        stopTone(note, duration, timeIn); 
+    } else { osc.start() }
     aBoolObjects[note] = false;
-    if (callback) {stopTone(note, callback, duration)}
 }
 
-function stopTone(note, callback, duration) {
+function stopTone(note, duration, timeIn) {
     let osc = noteObjects[note]
     if (duration) {
-      osc.stop(ac.currentTime + duration);
+      osc.stop(ac.currentTime + timeIn + duration);
     } else {
       osc.stop(ac.currentTime + 0.5)
     }
     aBoolObjects[note] = true;
     let lengthSecNote = ac.currentTime - osc.starter // note duration
+    let timeInNote = osc.starter - newRecordingTimeIn
     console.log(lengthSecNote)
-    noteRecorder(note, lengthSecNote) //saves note on Recording Variable
+    noteRecorder(note, lengthSecNote, timeInNote) //saves note on Recording Variable
     createNote(note)
-    if (callback) {osc.onended = function() {
-        Array.from( document.getElementsByClassName('note')).forEach(element => element.style="")
-        callback();
-         }
-    } else {
-        Array.from( document.getElementsByClassName('note')).forEach(element => element.style="")
-    }
+    Array.from( document.getElementsByClassName('note')).forEach(element => element.style="")
 }
 
 //REPLAY SONG FUNCTIONALITY
 //iterates over the array and plays the song
-let notes = [] //temp storage variable for playing songs
+
 function playSong(song) {
-    song.forEach
-    notes = [...song]
-    playMelody()
-}
-function playMelody(){
-	if (notes.length > 0){
-        let note = notes.shift();
-        console.log(note.note)
-        playTone(note.note, playMelody, note.duration);
-	}
-}
+    song.notes.forEach(
+        note => playTone(note.note, note.duration, note.time_in)
+    )
+ }
 
 //PLAY NOTES WITH EVENTLISTENERS
 //plays note when pressing key
@@ -147,6 +140,7 @@ document.addEventListener('click',
 
 let recording = false
 let newRecording = []//const to let
+let newRecordingTimeIn
 
 //RECORDING FUNCTIONALITY
 const recordBtn = document.getElementById('record')
@@ -160,6 +154,7 @@ recordBtn.addEventListener('click',
             saveBtn.style="background:grey;color:#fff;"
             saveBtn.disabled = true
             newRecording = []
+            newRecordingTimeIn = ac.currentTime
         } else {
             recordBtn.innerHTML = "Record"
             recordBtn.style=""
@@ -169,11 +164,11 @@ recordBtn.addEventListener('click',
     }
 )
 
-function noteRecorder(note, duration) {
+function noteRecorder(note, duration, timeIn) {
     if (recording === false) {
         return
     } else {
-        let newNote = new Note(note, duration)
+        let newNote = new Note(note, duration, timeIn)
         newRecording.push(newNote)
     }
 }

@@ -201,7 +201,7 @@ input[type=range] {
     background:#000;
     width: 0.25em;
     border-radius: 3px;
-    background: #00;
+    background: #000;
     cursor: pointer;
     -webkit-appearance: none;
     margin-top: -14px;

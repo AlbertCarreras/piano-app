@@ -2,6 +2,7 @@
 const ac = new AudioContext();
 
 //CONSTANTS VARIABLES
+const url = 'http://localhost:3000'
 const frequencyList = {"C": 32.70, "C#":34.65, "D":36.71, "Eb":38.89,	"E":41.20, "F":43.65, "F#":46.25,	"G":49.00, "G#":51.91,	"A":55.00,	"Bb":58.27,	"B":61.74} // frequency - key hash
 const keyValues = { "A":"C", "W":"C#", "S":"D", "E":"Eb", "D":"E", "F":"F" , "R":"F#", "G":"G" , "T":"G#", "H":"A" , "Y":"Bb", "J":"B" } //key - note hash for keypress
 
@@ -34,7 +35,7 @@ const customWaveform = ac.createPeriodicWave(cosineTerms, sineTerms);
 //SONG SELECTOR FUNCTIONALITY
 //Fetches all of the song names for the song selector
 function init() {
-    fetch("http://localhost:3000/api/v1/songs").then(r=>r.json()).then(r => {displaySongs(r); getSong()})
+    fetch(`${url}/api/v1/songs`).then(r=>r.json()).then(r => {displaySongs(r); getSong()})
  }
  
  init()
@@ -58,7 +59,7 @@ let currentSong = []
 
 //changes/downloads song when selector is changed
 function getSong() {
-    fetch(`http://localhost:3000/api/v1/songs/${songSelector.value}`).then(r=>r.json()).then(r => {currentSong = r; currentSongId = r.id;})
+    fetch(`${url}/api/v1/songs/${songSelector.value}`).then(r=>r.json()).then(r => {currentSong = r; currentSongId = r.id;})
 }
 
 songSelector.addEventListener("change", function(){ //checks if new song is chosen, fetches new song
@@ -153,7 +154,6 @@ function singleNoteStopper(osc, note) {
 
 //REPLAY SONG FUNCTIONALITY
 //iterates over the array and plays the song
-
 function playSong(song) {
     song.notes.forEach(
         note => playNote(note.note, note.duration, note.time_in)
@@ -162,19 +162,21 @@ function playSong(song) {
 
 //PLAY NOTES WITH EVENTLISTENERS
 //plays note when pressing key
+
+const getKeyValues = (event) => keyValues[event.key.toUpperCase()]
+
 document.addEventListener('keydown',
     function (event) {
-      if (aBoolObjects[keyValues[event.key.toUpperCase()]]) {
-          console.log(keyValues[event.key.toUpperCase()])
-          playNote(keyValues[event.key.toUpperCase()])
+      if (aBoolObjects[getKeyValues(event)]) {
+          playNote( getKeyValues(event) )
         }
     }
 )
 
 document.addEventListener('keyup',
    function (event){
-    if (aBoolObjects[keyValues[event.key.toUpperCase()]] == false) {
-        stopNote( keyValues[event.key.toUpperCase()] )
+    if (aBoolObjects[getKeyValues(event)] == false) {
+        stopNote( getKeyValues(event) )
     }
    }
 )
@@ -201,28 +203,38 @@ document.addEventListener('mouseup',
 //RECORDING FUNCTIONALITY
 let recording = false
 let newRecording = []//const to let
-let newRecordingTimeIn
+let newRecordingTimeIn = ""
 
 const recordBtn = document.getElementById('record')
+
 recordBtn.addEventListener('click',
     function(event) {
         recording = !recording
         console.log(recording)
         if (recording) {
-            recordBtn.innerHTML = "Stop"
-            recordBtn.style="background:red;color:#fff;"
-            saveBtn.style="background:grey;color:#fff;"
-            saveBtn.disabled = true
-            newRecording = []
-            newRecordingTimeIn = ac.currentTime
+            startRecording()
         } else {
-            recordBtn.innerHTML = "Record"
-            recordBtn.style=""
-            saveBtn.disabled = false
-            saveBtn.style=""
+            stopRecording()
         }
     }
 )
+
+const startRecording = () => {
+    recordBtn.innerHTML = "Stop"
+    recordBtn.style="background:red;color:#fff;"
+    saveBtn.style="background:grey;color:#fff;"
+    saveBtn.disabled = true
+    newRecording = []
+    newRecordingTimeIn = ac.currentTime
+}
+
+const stopRecording = () => {
+    recordBtn.innerHTML = "Record"
+    recordBtn.style=""
+    saveBtn.style=""
+    saveBtn.disabled = false
+}
+
 
 function noteRecorder(note, duration, timeIn) {
     if (recording === false) {
@@ -238,20 +250,23 @@ const saveBtn = document.getElementById('save_song')
 
 saveBtn.addEventListener('click',
     function () {
+        let songName = document.getElementById('song_name')
+
         saveBtn.style="background:red;color:#fff;";
         saveBtn.innerHTML = "Saving";
         setTimeout(function() { saveBtn.style= ""; saveBtn.innerHTML = "Save"; songName.value = "Your song was saved! Check the list." }, 1000);
 
-        let songName = document.getElementById('song_name')
-
-        fetch("http://localhost:3000/api/v1/songs",
-            { method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({name: songName.value, notes: newRecording})}
-        ).then(r => r.json()).then(init)
-
         currentSong = {name: songName.value, notes: newRecording}
-
+        postSong(currentSong)
+        
         setTimeout(()=> songName.value = "", 5000)
     }
 )
+
+function postSong(currentSong) {
+    fetch(`${url}/api/v1/songs`,
+            { method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(currentSong)}
+        ).then(r => r.json()).then(init)
+}

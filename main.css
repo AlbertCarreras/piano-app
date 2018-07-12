@@ -198,10 +198,12 @@ input[type=range] {
   }
   input[type=range]::-webkit-slider-runnable-track {
     width: 100%;
-    height: 0.25em;
+    height: 0.5em;
     cursor: pointer;
     animate: 0.2s;
     background: purple;
+    border: 2px solid #5b0d0d;
+    box-shadow: inset 0px 0px 4px #490202;
     border-radius: 1.3px;
   }
   input[type=range]::-webkit-slider-thumb {

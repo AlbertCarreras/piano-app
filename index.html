@@ -33,15 +33,28 @@
             <div class="downloader">
                         <select id="song_names">
                         </select>
-                        <button id="play">►</button>
+                         <button id="play">►</button>
+                         <div class="x">
+                         <span>Pitch: </span>
                         <input id="frqRange" type="range" min="1" max="20" step="0.1">
                             <div class="f x">
                                 <div class="fa s2 ac">👴</div>
                                 <div class="fa s2 ac">👨</div>
                                 <div class="fa s2 ac">👦</div>
                             </div>
+                        </div>
+                            <div class="volume x">
+                                    <span>Volume: </span>
+                                    <input type="range" min="0.0" max="5.0" step="0.01"
+                                        value="0.5" list="volumes" name="volume">
+                                    <datalist id="volumes">
+                                      <option value="0.0" label="Mute">
+                                      <option value="5.0" label="100%">
+                                    </datalist>
+                                  </div>
+
             </div>      
-    </div>
+     </div>
 </body>
 <script src="note.js"></script>
 <script src="index.js"></script>

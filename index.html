@@ -15,12 +15,15 @@
 
     <h1>Piano Friend 👋</h1>
 
+    <div class="displayUrlSong" id="displayUrlSong">
+      <p>Your friend send you a piano song.</p>
+      <button id="play" data-action="playUrl">►</button>
+    </div>
+
     <div class="controls">
       <input type="text" id="song_name" placeholder="Your Song Name"></input>
       <button id="record">Record</button>
       <button id="save_song">Save</button>
-      <button id="play" data-action="playUrl">►</button>
-
     </div>
 
     <div id="keys">
@@ -39,6 +42,13 @@
     </div>
 
     <div class="downloader">
+        <p>Share the url</p>
+        <input type="text" id="shareUrlSong" placeholder="Create and save a song!"/>
+        <button id="copypaste">Copy</button>
+        <button data-action="visitSongUrl">Visit Your Song Page</button>
+    </div>
+
+    <div class="downloader">
       <p>Load Song</p>
       <select id="song_names"></select>
       <button id="play" data-action="playLoad">►</button>
@@ -52,7 +62,9 @@
           <div class="fa s2 ac hue">👦</div>
         </div>
       </div>
+
       <hr>
+
       <div class="volume x mt1">
         <p>Volume</p>
         <input type="range" min="0.0" max="5.0" step="0.01" value="0.5" list="volumes" name="volume">
@@ -61,17 +73,10 @@
           <option value="5.0" label="100%">
         </datalist>
       </div>
-
-      <div>
-        Share the url:
-        <input type="text" id="shareUrlSong" placeholder="Create and save a song!"/>
-      </div>
-      <button id="copypaste">Copy</button>
-      <button id="visitSongUrl">Visit Your Song Page</button>
-
     </div>
 
   </div>
+
 </body>
 <script src="note.js"></script>
 <script src="index.js"></script>

@@ -1,53 +1,83 @@
-//NEW AUDIOCONTEXT
-const ac = new(window.AudioContext ||
-  window.webkitAudioContext ||
-  window.mozAudioContext ||
-  window.oAudioContext ||
-  window.msAudioContext);
+// >>>
+// >>> GLOBAL VARIABLES
+// >>>
 
-//CONSTANTS VARIABLES
-const url = 'http://localhost:3000'
-const frequencyList = {
-  "C": 32.70,
-  "C#": 34.65,
-  "D": 36.71,
-  "Eb": 38.89,
-  "E": 41.20,
-  "F": 43.65,
-  "F#": 46.25,
-  "G": 49.00,
-  "G#": 51.91,
-  "A": 55.00,
-  "Bb": 58.27,
-  "B": 61.74
-} // frequency - key hash
-const keyValues = {
-  "A": "C",
-  "W": "C#",
-  "S": "D",
-  "E": "Eb",
-  "D": "E",
-  "F": "F",
-  "R": "F#",
-  "G": "G",
-  "T": "G#",
-  "H": "A",
-  "Y": "Bb",
-  "J": "B"
-} //key - note hash for keypress
+//CONSTANT VARIABLES
+  //url
+  const url = 'http://localhost:3000'
+  //new audiocontext
+  const ac = new(window.AudioContext ||
+    window.webkitAudioContext ||
+    window.mozAudioContext ||
+    window.oAudioContext ||
+    window.msAudioContext);
+  //piano notes
+  // frequency - key hash
+  const frequencyList = {
+    "C": 32.70,
+    "C#": 34.65,
+    "D": 36.71,
+    "Eb": 38.89,
+    "E": 41.20,
+    "F": 43.65,
+    "F#": 46.25,
+    "G": 49.00,
+    "G#": 51.91,
+    "A": 55.00,
+    "Bb": 58.27,
+    "B": 61.74
+  }
+  //key - note hash for keypress
+  const keyValues = {
+    "A": "C",
+    "W": "C#",
+    "S": "D",
+    "E": "Eb",
+    "D": "E",
+    "F": "F",
+    "R": "F#",
+    "G": "G",
+    "T": "G#",
+    "H": "A",
+    "Y": "Bb",
+    "J": "B"
+  }
+  //Oscillator variables
+  //Creates GainNode for volume
+  const masterGainNode = ac.createGain();
+  //Creates custom waveform for oscillators in createNote
+  const sineTerms = new Float32Array([0, 0, 1, 0, 1]);
+  const cosineTerms = new Float32Array(sineTerms.length);
+  const customWaveform = ac.createPeriodicWave(cosineTerms, sineTerms);
 
 //DYNAMIC VARIABLES
-const aBoolObjects = {}
-const noteObjects = {}
+  //avoids multiple keydown events at once storing true/false states on each note
+  const aBoolObjects = {}
+  //stores an oscillator for each note via f createNote 
+  const noteObjects = {}
+  //song variables
+  let currentSongId = ""
+  let currentSong = []
+  let endNoteTime = ""
 
-//BUTTONS
-const frqRange = document.getElementById('frqRange')
-let songName = document.getElementById('song_name')
+//HTML ELEMENTS
+  let songName = document.getElementById('song_name')
+  let displayUrlSong = document.getElementById('displayUrlSong')
+  const songSelector = document.getElementById("song_names")
+  const container = document.getElementById("container")
+  const shareUrlEl = document.getElementById("shareUrlSong");
+  //buttons
+  const playBtn = document.getElementById("play")
+  const frqRange = document.getElementById('frqRange')
+  let volumeControl = document.querySelector("input[name='volume']");
+  const copypaste = document.getElementById('copypaste');
+
+
+// >>>
+// >>> FUNCTIONALITY
+// >>>
 
 //VOLUME & WAVEFORM FUNCTIONALITY
-let volumeControl = document.querySelector("input[name='volume']");
-const masterGainNode = ac.createGain();
-
 masterGainNode.connect(ac.destination);
 
 masterGainNode.gain.value = volumeControl.value;
@@ -58,13 +88,6 @@ function changeVolume(event) {
 
 volumeControl.addEventListener("change", changeVolume, false);
 
-//Creates custom waveform for oscillators in createNote
-const sineTerms = new Float32Array([0, 0, 1, 0, 1]);
-const cosineTerms = new Float32Array(sineTerms.length);
-const customWaveform = ac.createPeriodicWave(cosineTerms, sineTerms);
-
-
-
 //SONG SELECTOR FUNCTIONALITY
 //Fetches all of the song names for the song selector
 function init() {
@@ -72,13 +95,15 @@ function init() {
     displaySongs(r);
     getSong()
   })
+  if (getUrl() != "undefined") {
+    console.log("you've got a song")
+  } else {
+    displayUrlSong.style.display = "none"
+  }
 }
-
 init()
 
 //populates song selector with song option
-const songSelector = document.getElementById("song_names")
-
 function displaySongs(songs) {
   songSelector.innerHTML = ""
   songs.reverse().forEach(function(song) {
@@ -88,13 +113,6 @@ function displaySongs(songs) {
   })
 }
 
-//play button and song variables
-const container = document.getElementById("container")
-const playBtn = document.getElementById("play")
-
-let currentSongId = ""
-let currentSong = []
-
 //listener router
 container.addEventListener("click", function(e){
   if (e.target.dataset.action === "playLoad") {
@@ -103,6 +121,9 @@ container.addEventListener("click", function(e){
   else if (e.target.dataset.action === "playUrl") {
     getSongFromUrl();
     activatePlaySong();
+  }
+  else if (e.target.dataset.action === "visitSongUrl") {
+    getToUrl();
   }
 })
 
@@ -218,7 +239,6 @@ function singleNoteStopper(osc, note) {
 
 //REPLAY SONG FUNCTIONALITY
 //iterates over the array and plays the song
-let endNoteTime = ""
 
 function playSong(song) {
   song.notes.forEach(
@@ -340,50 +360,58 @@ saveBtn.addEventListener('click',
   }
 )
 
+function jsonStringify(currentSong) {
+  return JSON.stringify(currentSong);
+}
+
+function jsonParser(jsonObj) {
+  return JSON.parse(jsonObj);
+}
+
 function postSong(currentSong) {
   fetch(`${url}/api/v1/songs`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(currentSong)
+    body: jsonStringify(currentSong)
   }).then(r => r.json()).then(init)
 }
 
-
 //SHARING FUNCTIONALITY
 //creates url with song values
-function stringifiedSong() {
-  let a = JSON.stringify(currentSong)
-  return `file:///Users/alberto/Desktop/piano/index.html?song=${a}`
+function encodedSongUrl() {
+  let encodedSong = encodeURIComponent(jsonStringify(currentSong));
+  return `file:///Users/alberto/Desktop/piano/index.html?song=${encodedSong}`;
 }
-
-let shareUrlEl = document.getElementById("shareUrlSong")
 
 function generateShareUrl() {
-  shareUrlEl.value = stringifiedSong()
+  shareUrlEl.value = encodedSongUrl();
 }
 
-//copy pasting functionality
-document.getElementById('copypaste').addEventListener('click', function(e){
-  e.preventDefault();
-  document.getElementById("shareUrlSong").select();
+//copy-pasting url from url box
+copypaste.addEventListener('click', function(event){
+  event.preventDefault();
+  shareUrlEl.select();
   try
     { copied = document.execCommand('copy'); }
   catch (ex)
     { copied = false; }
-
   if (copied)
     { console.log('copied!'); }
 });
+
+//gets decoded song from url
 function getUrl(){
-  return window.location.href.split("file:///Users/alberto/Desktop/piano/index.html?song=")[1].replace(/%22/g, `"`).replace(/%20/g, ` `);
+  return decodeURIComponent(window.location.href.split("file:///Users/alberto/Desktop/piano/index.html?song=")[1]);
 }
 
+//saves the song encoded in the url into currentSong
 function getSongFromUrl(){
-  currentSong = JSON.parse(getUrl());
+  currentSong = jsonParser(getUrl());
 }
 
-function getToUrl(){
-  window.location.replace(`${shareUrlEl.value}`);
+//opens new window with passed url (with encoded song)
+function getToUrl(){ //opens new window with url containing song
+   window.open(`${shareUrlEl.value}`);
 }

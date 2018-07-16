@@ -4,7 +4,7 @@
 
 //CONSTANT VARIABLES
   //url
-  const url = 'http://localhost:3000'
+  const url = 'https://pianofriend-api.herokuapp.com'
   //new audiocontext
   const ac = new(window.AudioContext ||
     window.webkitAudioContext ||
@@ -53,7 +53,7 @@
 //DYNAMIC VARIABLES
   //avoids multiple keydown events at once storing true/false states on each note
   const aBoolObjects = {}
-  //stores an oscillator for each note via f createNote 
+  //stores an oscillator for each note via f createNote
   const noteObjects = {}
   //song variables
   let currentSongId = ""
@@ -382,7 +382,7 @@ function postSong(currentSong) {
 //creates url with song values
 function encodedSongUrl() {
   let encodedSong = encodeURIComponent(jsonStringify(currentSong));
-  return `file:///Users/alberto/Desktop/piano/index.html?song=${encodedSong}`;
+  return `${url}${encodedSong}`;
 }
 
 function generateShareUrl() {
@@ -403,7 +403,7 @@ copypaste.addEventListener('click', function(event){
 
 //gets decoded song from url
 function getUrl(){
-  return decodeURIComponent(window.location.href.split("file:///Users/alberto/Desktop/piano/index.html?song=")[1]);
+  return decodeURIComponent(window.location.href.split(`${url}`)[1]);
 }
 
 //saves the song encoded in the url into currentSong

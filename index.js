@@ -407,6 +407,8 @@ function getUrl(){
   return decodeURIComponent(window.location.href.split(`${htmlUrl}/?song=`)[1]);
 }
 
+//TEST
+
 //saves the song encoded in the url into currentSong
 function getSongFromUrl(){
   currentSong = jsonParser(getUrl());

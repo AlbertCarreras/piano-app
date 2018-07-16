@@ -16,7 +16,7 @@
     <h1>Piano Friend 👋</h1>
 
     <div class="displayUrlSong" id="displayUrlSong">
-      <p>Your friend send you a piano song.</p>
+      <p>Your friend created a piano song for you.</p>
       <button id="play" data-action="playUrl">►</button>
     </div>
 

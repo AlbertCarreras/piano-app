@@ -404,7 +404,7 @@ copypaste.addEventListener('click', function(event){
 
 //gets decoded song from url
 function getUrl(){
-  return decodeURIComponent(window.location.href.split(`${htmlUrl}?song=`)[1]);
+  return decodeURIComponent(window.location.href.split(`${htmlUrl}/?song=`)[1]);
 }
 
 //saves the song encoded in the url into currentSong

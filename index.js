@@ -382,7 +382,7 @@ function postSong(currentSong) {
 //creates url with song values
 function encodedSongUrl() {
   let encodedSong = encodeURIComponent(jsonStringify(currentSong));
-  return `${url}${encodedSong}`;
+  return `${url}?song=${encodedSong}`;
 }
 
 function generateShareUrl() {
@@ -403,7 +403,7 @@ copypaste.addEventListener('click', function(event){
 
 //gets decoded song from url
 function getUrl(){
-  return decodeURIComponent(window.location.href.split(`${url}`)[1]);
+  return decodeURIComponent(window.location.href.split(`${url}?song=`)[1]);
 }
 
 //saves the song encoded in the url into currentSong

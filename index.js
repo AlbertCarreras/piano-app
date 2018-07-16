@@ -4,7 +4,8 @@
 
 //CONSTANT VARIABLES
   //url
-  const url = 'https://pianofriend-api.herokuapp.com'
+  const apiUrl = 'https://pianofriend-api.herokuapp.com'
+  const htmlUrl = 'https://pianofriend.herokuapp.com'
   //new audiocontext
   const ac = new(window.AudioContext ||
     window.webkitAudioContext ||
@@ -91,7 +92,7 @@ volumeControl.addEventListener("change", changeVolume, false);
 //SONG SELECTOR FUNCTIONALITY
 //Fetches all of the song names for the song selector
 function init() {
-  fetch(`${url}/api/v1/songs`).then(r => r.json()).then(r => {
+  fetch(`${apiUrl}/api/v1/songs`).then(r => r.json()).then(r => {
     displaySongs(r);
     getSong()
   })
@@ -129,7 +130,7 @@ container.addEventListener("click", function(e){
 
 //changes/downloads song when selector is changed
 function getSong() {
-  fetch(`${url}/api/v1/songs/${songSelector.value}`).then(r => r.json()).then(r => {
+  fetch(`${apiUrl}/api/v1/songs/${songSelector.value}`).then(r => r.json()).then(r => {
     currentSong = r;
     currentSongId = r.id;
   })
@@ -369,7 +370,7 @@ function jsonParser(jsonObj) {
 }
 
 function postSong(currentSong) {
-  fetch(`${url}/api/v1/songs`, {
+  fetch(`${apiUrl}/api/v1/songs`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -382,7 +383,7 @@ function postSong(currentSong) {
 //creates url with song values
 function encodedSongUrl() {
   let encodedSong = encodeURIComponent(jsonStringify(currentSong));
-  return `${url}?song=${encodedSong}`;
+  return `${htmlUrl}?song=${encodedSong}`;
 }
 
 function generateShareUrl() {
@@ -403,7 +404,7 @@ copypaste.addEventListener('click', function(event){
 
 //gets decoded song from url
 function getUrl(){
-  return decodeURIComponent(window.location.href.split(`${url}?song=`)[1]);
+  return decodeURIComponent(window.location.href.split(`${htmlUrl}?song=`)[1]);
 }
 
 //saves the song encoded in the url into currentSong

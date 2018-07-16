@@ -5,7 +5,7 @@
 //CONSTANT VARIABLES
   //url
   const apiUrl = 'https://pianofriend-api.herokuapp.com'
-  const htmlUrl = 'https://pianofriend.herokuapp.com'
+  const htmlUrl = 'https://albertcarreras.github.io/piano'
   //new audiocontext
   const ac = new(window.AudioContext ||
     window.webkitAudioContext ||

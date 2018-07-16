@@ -5,7 +5,7 @@
 //CONSTANT VARIABLES
   //url
   const apiUrl = 'https://pianofriend-api.herokuapp.com'
-  const htmlUrl = 'https://albertcarreras.github.io/piano'
+  const htmlUrl = 'https://albertcarreras.github.io/piano-app/'
   //new audiocontext
   const ac = new(window.AudioContext ||
     window.webkitAudioContext ||
@@ -404,7 +404,7 @@ copypaste.addEventListener('click', function(event){
 
 //gets decoded song from url
 function getUrl(){
-  return decodeURIComponent(window.location.href.split(`${htmlUrl}/?song=`)[1]);
+  return decodeURIComponent(window.location.href.split(`${htmlUrl}?song=`)[1]);
 }
 
 //TEST

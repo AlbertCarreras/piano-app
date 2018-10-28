@@ -1,0 +1,30 @@
+{
+  "name": "piano-app",
+  "version": "1.0.0",
+  "description": "A piano app to create, save, and share simple piano songs.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run webpack",
+    "webpack": "webpack -d --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlbertCarreras/piano-app.git"
+  },
+  "author": "Alberto Carreras",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlbertCarreras/piano-app/issues"
+  },
+  "homepage": "https://github.com/AlbertCarreras/piano-app#readme",
+  "dependencies": {
+    "webpack": "^4.23.1"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.1.2"
+  }
+}

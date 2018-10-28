@@ -21,8 +21,8 @@ Front-end
 https://github.com/AlbertCarreras/piano-app
 
 Vanilla Javascript
-* **AudioContext Web API for sounds (notes) 
-* **Webpack    
+* **AudioContext** Web API for sounds (notes) 
+* **Webpack**    
 
 ### Back-end 
 #### Setup

@@ -1,18 +1,22 @@
 //IMPORTS
+//Classes
+import SongNote from './songNote';
+import Notes from './note';
+import Audio from './audio';
+//Libraries
+import helpers from './../lib/helpers';
+import songUrl from './../lib/songUrl';
+//Constants
 import * as htmlEl from './htmlElements';
 import * as ct from './constants';
-import SongNote from './songNote';
-import Audio from './audio';
 
 //CONSTANT VARIABLES
-//new audiocontext
-const audio = new Audio()
+  // Setup audio context and notes
+  const audio = new Audio();
+  const notes = new Notes();
+  notes.createNotes(audio);
 
 //DYNAMIC VARIABLES
-  //avoids multiple keydown events at once storing true/false states on each note
-  const aBoolObjects = {};
-  //stores an oscillator for each note via f createNote
-  const noteObjects = {};
   //song variables
   let currentSongId = "";
   let currentSong = [];
@@ -29,7 +33,7 @@ function init() {
     displaySongs(r);
     getSong();
   })
-  if (getUrl() != "undefined") {
+  if (songUrl.getUrl() != "undefined") {
     console.log("you've got a song");
   } else {
     htmlEl.displayUrlSong.style.display = "none";
@@ -53,11 +57,13 @@ htmlEl.container.addEventListener("click", function(e){
     activatePlaySong();
   }
   else if (e.target.dataset.action === "playUrl") {
-    getSongFromUrl();
+    //saves the song encoded in the url into currentSong
+    currentSong = songUrl.getSongFromUrl();
     activatePlaySong();
   }
   else if (e.target.dataset.action === "visitSongUrl") {
-    getToUrl();
+    //opens new window with passed url (with encoded song)
+    songUrl.getToUrl(htmlEl.shareUrlEl.value);
   }
 })
 
@@ -71,7 +77,7 @@ function getSong() {
 
 //checks if new song is chosen, fetches new song
 htmlEl.songSelector.addEventListener("change", function() { 
-  if (currentSongId === songSelector.value) {
+  if (currentSongId === htmlEl.songSelector.value) {
     return
   } else {
     getSong();
@@ -91,40 +97,15 @@ function activatePlaySong(){
   }, endNoteTime * 1000);
 }
 
-//NOTES
-//builds noteObjects from list of notes and their frequencies (frequencyList)
-function createNote(key) { //for each note,
-  let osc = audio.ac.createOscillator();
-  let frequency = ct.frequencyList[key];
-  osc.frequency.value = frequency * htmlEl.frqRange.value;
-  osc.setPeriodicWave(audio.customWaveform); //waveform for tone
-  osc.connect(audio.masterGainNode);
-  noteObjects[key] = osc;
-  aBoolObjects[key] = true;
-}
-
-//Iterates over frequency list creating & storing notes
-function createNotes() {
-  Object.keys(ct.frequencyList).forEach(
-    key => createNote(key)
-  )
-}
-
-createNotes();
-
 //PLAYING FUNCTIONALITY
-//Monkey patching adding startTime function to OscillatorNode to save ac.currentTime on each instance
-OscillatorNode.prototype.startTime = function() {
-  this.starter = audio.ac.currentTime;
-}
 
 //Plays notes from playSong() and eventlisteners
 function playNote(note, duration, timeIn) {
   //create new oscillator object to reset pitch
-  createNote(note); 
-  aBoolObjects[note] = false;
+  notes.createNote(note, audio); 
+  notes.aBoolObjects[note] = false;
 
-  let osc = noteObjects[note];
+  let osc = notes.noteObjects[note];
   //sets start time (.starter) of new oscillator
   osc.startTime();
   if (timeIn) {
@@ -151,7 +132,7 @@ function singleNoteStarter(osc, note) {
 }
 
 function stopNote(note, duration, timeIn) {
-  let osc = noteObjects[note];
+  let osc = notes.noteObjects[note];
 
   if (duration) {
     songNoteStopper(note, duration, timeIn, osc);
@@ -159,7 +140,7 @@ function stopNote(note, duration, timeIn) {
     singleNoteStopper(osc, note);
   }
 
-  aBoolObjects[note] = true;
+  notes.aBoolObjects[note] = true;
 
   let lengthSecNote = audio.ac.currentTime - osc.starter; // note duration
   let timeInNote = osc.starter - newRecordingTimeIn;
@@ -194,7 +175,7 @@ const getKeyValues = (event) => ct.keyValues[event.key.toUpperCase()];
 
 document.addEventListener('keydown',
   function(event) {
-    if (aBoolObjects[getKeyValues(event)]) {
+    if (notes.aBoolObjects[getKeyValues(event)]) {
       playNote(getKeyValues(event));
     }
   }
@@ -202,7 +183,7 @@ document.addEventListener('keydown',
 
 document.addEventListener('keyup',
   function(event) {
-    if (aBoolObjects[getKeyValues(event)] == false) {
+    if (notes.aBoolObjects[getKeyValues(event)] == false) {
       stopNote(getKeyValues(event));
     }
   }
@@ -262,7 +243,6 @@ const stopRecording = () => {
   saveBtn.disabled = false;
 }
 
-
 function noteRecorder(note, duration, timeIn) {
   if (recording === false) {
     return
@@ -291,19 +271,11 @@ saveBtn.addEventListener('click',
     }
     postSong(currentSong);
 
-    generateShareUrl();
+    songUrl.generateShareUrl(htmlEl.shareUrlEl, currentSong)
 
     setTimeout(() => htmlEl.songName.value = "", 5000);
   }
 )
-
-function jsonStringify(currentSong) {
-  return JSON.stringify(currentSong);
-}
-
-function jsonParser(jsonObj) {
-  return JSON.parse(jsonObj);
-}
 
 function postSong(currentSong) {
   fetch(`${ct.apiUrl}/api/v1/songs`, {
@@ -311,25 +283,15 @@ function postSong(currentSong) {
     headers: {
       "Content-Type": "application/json"
     },
-    body: jsonStringify(currentSong)
+    body: helpers.jsonStringify(currentSong)
   }).then(r => r.json()).then(init)
-}
-
-//SHARING FUNCTIONALITY
-//creates url with song values
-function encodedSongUrl() {
-  let encodedSong = encodeURIComponent(jsonStringify(currentSong));
-  return `${ct.htmlUrl}?song=${encodedSong}`;
-}
-
-function generateShareUrl() {
-  htmlEl.shareUrlEl.value = encodedSongUrl();
 }
 
 //copy-pasting url from url box
 htmlEl.copypaste.addEventListener('click', function(event){
   event.preventDefault();
   htmlEl.shareUrlEl.select();
+  var copied;
   try
     { copied = document.execCommand('copy'); }
   catch (ex)
@@ -337,18 +299,3 @@ htmlEl.copypaste.addEventListener('click', function(event){
   if (copied)
     { console.log('copied!'); }
 });
-
-//gets decoded song from url
-function getUrl(){
-  return decodeURIComponent(window.location.href.split(`${ct.htmlUrl}?song=`)[1]);
-}
-
-//saves the song encoded in the url into currentSong
-function getSongFromUrl(){
-  currentSong = jsonParser(getUrl());
-}
-
-//opens new window with passed url (with encoded song)
-function getToUrl(){ //opens new window with url containing song
-   window.open(`${htmlEl.shareUrlEl.value}`);
-}

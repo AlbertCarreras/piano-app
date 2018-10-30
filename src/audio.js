@@ -2,18 +2,19 @@ import { volumeControl } from './htmlElements';
 
 class Audio{
     constructor() {
-        // Creates audio context
+        // Initializes audio context
         this.ac = new(window.AudioContext ||
             window.webkitAudioContext ||
             window.mozAudioContext ||
             window.oAudioContext ||
             window.msAudioContext)
 
-        // Creates volume node with volume functionality
-            this.masterGainNode = (function (ac, volumeCallback) {
+        // Initializes volume node with volume functionality
+        this.masterGainNode = (function (ac, volumeCallback) {
             let gainNode = ac.createGain();
             gainNode.connect(ac.destination);
             gainNode.gain.value = volumeControl.value;
+            
             //listener for volume functionality
             volumeControl.addEventListener("change", volumeCallback.bind(this, volumeControl), false);
             return gainNode;
@@ -24,6 +25,14 @@ class Audio{
         this.cosineTerms = new Float32Array(this.sineTerms.length);
         this.customWaveform = this.ac.createPeriodicWave(this.cosineTerms, this.sineTerms);
 
+        //Monkey patching adding startTime function to OscillatorNode to save ac.currentTime on each instance
+        //IIFE for executing monkey patching
+        //.startTime is a method of osc and this in this.starter will equal to osc
+        this.addStartTimeToOsc = (function (audio) {
+            OscillatorNode.prototype.startTime = function() {
+                this.starter = audio.ac.currentTime;
+            }
+        })(this)
     }
 
     changeVolume(volumeControl) {

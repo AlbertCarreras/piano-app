@@ -1,8 +1,8 @@
 //IMPORTS
 //Classes
-import SongNote from './songNote';
-import Notes from './note';
-import Audio from './audio';
+import SongNote from './songNoteClass';
+import Note from './noteClass';
+import Audio from './audioClass';
 //Libraries
 import helpers from './../lib/helpers';
 import songUrl from './../lib/songUrl';
@@ -13,7 +13,7 @@ import * as ct from './constants';
 //CONSTANT VARIABLES
   // Setup audio context and notes
   const audio = new Audio();
-  const notes = new Notes();
+  const notes = new Note();
   notes.createNotes(audio);
 
 //DYNAMIC VARIABLES

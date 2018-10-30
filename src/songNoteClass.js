@@ -1,4 +1,4 @@
-class Note {
+class SongNote {
     constructor(note, duration, time_in) {
         this.note = note
         this.duration = duration
@@ -6,4 +6,4 @@ class Note {
     }
 }
 
-export default Note;
+export default SongNote;

@@ -1,7 +1,7 @@
 import * as ct from './constants';
 import * as htmlEl from './htmlElements';
 
-class Notes {
+class Note {
     constructor() {
         //avoids multiple keydown events at once storing true/false states on each note
         this.aBoolObjects = {};
@@ -28,4 +28,4 @@ class Notes {
     }
 }
 
-export default Notes;
+export default Note;

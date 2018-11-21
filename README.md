@@ -21,9 +21,14 @@ Front-end
 https://github.com/AlbertCarreras/piano-app
 
 Vanilla Javascript
-* **AudioContext** Web API for sounds (notes) 
-* **Webpack**    
 
+* **App Structure** The app has a main file index.js, 2 libraries, and 3 class objects. 
+  - Libraries support the app with modular functionality. The libraries are built with IIFE and namespacing.
+  - Class objects are used to create audio context, audio notes and song notes instances (audio notes with timing and duration).
+
+* **AudioContext** Web API for sounds (notes) 
+* **Webpack** Implemented for building app> Needed after implementing import/export functionality.
+  
 ### Back-end 
 #### Setup
 1. Clone repo.
